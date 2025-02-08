@@ -1,47 +1,50 @@
 <?php
-require_once "../repositories/GameRepository.php";
-require_once "../models/Game.php";
+require_once __DIR__."/../repositories/GameRepository.php";
+require_once __DIR__."/../models/Game.php";
+require_once __DIR__."/../util/GameException.php";
+require_once __DIR__."/../util/Constants.php";
 class GameService {
 
-    public static function saveGame(Game $game) {
+    public static function saveGame(Game $game): Game {
         try {
-            return GameRepository:: save($game);
-        } catch (Exception $e) {
-            throw new Exception("Error en GameService::saveGame - " . $e->getMessage());
+            return GameRepository::save($game);
+        } catch (PDOException $e) {
+            throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }
     }
 
-    public static function getGameById($id) {
+    public static function getGameById($id): ?Game {
         try {
             $game = GameRepository::findById($id);
             return $game;
-        } catch (Exception $e) {
-            throw new Exception("Error en GameService::getGameById - " . $e->getMessage());
+        } catch (PDOException $e) {
+            throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }
     }
 
-    public static function getGamesByDate($date) {
+    public static function getGamesByDate($date): array {
         try {
             $games = GameRepository::findByDate($date);
             return $games;
-        } catch (Exception $e) {
-            throw new Exception("Error en GameService::getGamesByDate - " . $e->getMessage());
+        } catch (PDOException $e) {
+            throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }
     }
-    public static function deleteGameById($id) {
+    
+    public static function deleteGameById($id): void {
         try {
             GameRepository::deleteById($id);
-        } catch (Exception $e) {
-            throw new Exception("Error en GameService::deleteGameById - " . $e->getMessage());
+        } catch (PDOException $e) {
+            throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }
     }
 
-    public static function getGamesBetweenDates($startDate, $endDate) {
+    public static function getGamesBetweenDates($startDate, $endDate): array {
         try {
             $games = GameRepository::findBetweenDates($startDate, $endDate);
             return $games;
-        } catch (Exception $e) {
-            throw new Exception("Error en GameService::getGamesBetweenDates - " . $e->getMessage());
+        } catch (PDOException $e) {
+            throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }
     }
 }

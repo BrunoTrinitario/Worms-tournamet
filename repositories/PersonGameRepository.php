@@ -1,76 +1,81 @@
 <?php
-require_once "../models/PersonGame.php";
+require_once __DIR__."/../models/PersonGame.php";
+require_once __DIR__."/../dtos/PersonPointDto.php";
 class PersonGameRepository {
-    public static function createPersonGame(PersonGame $personGame) {
-        try {
-            $pdo = Database::connect();
-            $stmt = $pdo->prepare("
-                INSERT INTO persongame (
-                    person_id, 
-                    game_id, 
-                    points, 
-                    mvp_points, 
-                    damage_points, 
-                    quantity_points
-                ) VALUES (?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $personGame->person->id,
-                $personGame->game->id,
-                $personGame->game_points,
-                $personGame->mvp_points,
-                $personGame->damage_points,
-                $personGame->quantity_points
-            ]);
-            $personGame->id = $pdo->lastInsertId();
-            return $personGame->id;
-        } catch (PDOException $e) {
-            throw new Exception("Error al crear PersonGame: " . $e->getMessage());
-        }
+    public static function createPersonGame(PersonGame $personGame): PersonGame {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("
+            INSERT INTO persongame (
+                person_id, 
+                game_id, 
+                points, 
+                mvp_points, 
+                damage_points, 
+                quantity_points
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $personGame->person->id,
+            $personGame->game->id,
+            $personGame->game_points,
+            $personGame->mvp_points,
+            $personGame->damage_points,
+            $personGame->quantity_points
+        ]);
+        $personGame->id = $pdo->lastInsertId();
+        return $personGame;
     }
 
-    public static function updatePersonGame(PersonGame $personGame) {
-        try {
-            if (!$personGame->id) {
-                throw new Exception("El ID es necesario para actualizar un registro.");
-            }
-            $pdo = Database::connect();
-            $stmt = $pdo->prepare("
-                UPDATE persongame SET 
-                    person_id = ?,
-                    game_id = ?,
-                    mvp_points = ?,
-                    damage_points = ?,
-                    quantity_points = ?
-                WHERE id = ?
-            ");
-            $stmt->execute([
-                $personGame->person->id,
-                $personGame->game->id,
-                $personGame->game_points,
-                $personGame->mvp_points,
-                $personGame->damage_points,
-                $personGame->quantity_points,
-                $personGame->id
-            ]);
-            return true;
-        } catch (PDOException $e) {
-            throw new Exception("Error al actualizar PersonGame: " . $e->getMessage());
-        }
+    public static function deleteById($id): void {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("DELETE FROM persongame WHERE id = ?");
+        $stmt->execute([$id]);
     }
 
-    public static function deleteById($id) {
-        try {
-            $pdo = Database::connect();
-            $stmt = $pdo->prepare("DELETE FROM persongame WHERE id = ?");
-            $stmt->execute([$id]);
-            if ($stmt->rowCount() === 0) {
-                throw new Exception("No se encontró ningún registro con ID: $id");
-            }
-            return true;
-        } catch (PDOException $e) {
-            throw new Exception("Error al eliminar PersonGame: " . $e->getMessage());
+    public static function getAllInfomationGameForUsers(): array{
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("SELECT person_id,
+        nick, 
+        count(*) as games, 
+        sum(points) as tot_points,
+        sum(mvp_points) as tot_mvp_points,
+        sum(damage_points) as tot_dmg_points,
+        sum(quantity_points) as tot_qua_points
+        FROM persongame, person 
+        where persongame.person_id = person.id
+        GROUP BY person_id
+        "
+        );
+        $stmt->execute();
+        $PersonPointArray=[];
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($data as $element){
+            $PersonPointArray[] = new PersonPointDto($element['person_id'],$element['nick'],$element['tot_points'],$element['tot_mvp_points'],$element['tot_dmg_points'],$element['tot_qua_points'],$element['games']);
         }
+        return $PersonPointArray;
+    }
+
+    public static function getAllInfomationGameForOneUser($id) : ?PersonPointDto{
+        $array = PersonGameRepository::getAllInfomationGameForUsers();
+        $aux = [];
+        foreach ($array as $persongame){
+            if ($persongame -> person_id == $id){
+                return $persongame;
+            }
+        }
+        return null;
+    }
+
+    public static function getAllGames(): array {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("SELECT persongame.*, nick FROM persongame, person where persongame.person_id = person.id");
+        $stmt->execute();
+        $PersonPointArray=[];
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($data as $element){
+            $PersonPointArray[] = new PersonPointDto($element['person_id'],$element['nick'],$element['points'],$element['mvp_points'],$element['damage_points'],$element['quantity_points'],1);
+        }
+        return $PersonPointArray;
     }
 }
 ?>

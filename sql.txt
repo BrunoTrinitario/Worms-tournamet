@@ -1,0 +1,19 @@
+CREATE TABLE person (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nick VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE game (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    description varchar(255),
+    fecha DATE NOT NULL
+);
+
+CREATE TABLE persongame (
+    persona_id INT,
+    partida_id INT,
+    puntos INT NOT NULL,
+    PRIMARY KEY (persona_id, partida_id),
+    FOREIGN KEY (persona_id) REFERENCES persona(id) ON DELETE CASCADE,
+    FOREIGN KEY (partida_id) REFERENCES partida(id) ON DELETE CASCADE
+);
