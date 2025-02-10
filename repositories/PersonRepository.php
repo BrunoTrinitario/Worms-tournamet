@@ -27,6 +27,19 @@ class PersonRepository{
         }
     }
 
+    public static function findAll(): array{
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("SELECT * FROM person");
+        $stmt->execute([]);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $persons=[];
+        foreach ($data as $element){
+            $persons[] = new Person($element['id'], $element['nick']);
+        }
+        return $persons;
+    }
+
     public static function findByNick($nick): ?Person {
         $pdo = Database::connect();
         $stmt = $pdo->prepare("SELECT * FROM person WHERE nick = ?");

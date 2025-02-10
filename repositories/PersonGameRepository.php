@@ -26,10 +26,10 @@ class PersonGameRepository {
         return $personGame;
     }
 
-    public static function deleteById($id): void {
+    public static function deleteById($person_id, $game_id): void {
         $pdo = Database::connect();
-        $stmt = $pdo->prepare("DELETE FROM persongame WHERE id = ?");
-        $stmt->execute([$id]);
+        $stmt = $pdo->prepare("DELETE FROM persongame WHERE person_id  = ? and game_id =  ? ");
+        $stmt->execute([$person_id, $game_id]);
     }
 
     public static function getAllInfomationGameForUsers(): array{
@@ -73,7 +73,7 @@ class PersonGameRepository {
         $PersonPointArray=[];
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($data as $element){
-            $PersonPointArray[] = new PersonPointDto($element['person_id'],$element['nick'],$element['points'],$element['mvp_points'],$element['damage_points'],$element['quantity_points'],1);
+            $PersonPointArray[] = new PersonPointDto($element['game_id'],$element['nick'],$element['points'],$element['mvp_points'],$element['damage_points'],$element['quantity_points'],1);
         }
         return $PersonPointArray;
     }

@@ -31,6 +31,14 @@ class PersonService{
         }
     }
 
+    public static function getAllPersons(): array{
+        try {
+            return PersonRepository::findAll();
+        } catch (PDOException $e) {
+            throw new Exception(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
+        }
+    }
+
     public static function deleteById($id): void{
         try {
             PersonRepository::deleteById($id);

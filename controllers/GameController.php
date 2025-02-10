@@ -7,7 +7,11 @@ http_response_code(200);
 try{
     switch($method){
         case "GET":
-            if (isset($_GET['id'])){
+            if (empty($_GET)){
+                $games = GameService::getAllGames();
+                echo json_encode($games);
+            }
+            elseif (isset($_GET['id'])){
                 $game = GameService::getGameById($_GET['id']);
                 echo json_encode($game);
             }elseif (isset($_GET['date'])){

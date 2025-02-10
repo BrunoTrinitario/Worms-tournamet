@@ -39,6 +39,14 @@ class GameService {
         }
     }
 
+    public static function getAllGames():array{
+        try {
+            return GameRepository::findAll();
+        } catch (PDOException $e) {
+            throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
+        }
+    }
+
     public static function getGamesBetweenDates($startDate, $endDate): array {
         try {
             $games = GameRepository::findBetweenDates($startDate, $endDate);

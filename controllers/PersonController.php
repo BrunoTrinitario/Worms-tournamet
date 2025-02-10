@@ -7,7 +7,11 @@ http_response_code(200);
 try{
     switch($method){
         case "GET":
-            if (isset($_GET['id'])){
+            if (empty($_GET)){
+                $persons = PersonService::getAllPersons();
+                echo json_encode($persons);
+            }
+            elseif (isset($_GET['id'])){
                 $person = PersonService::findById($_GET['id']);
                 echo json_encode($person);
             }elseif (isset($_GET['nick'])){
@@ -30,9 +34,8 @@ try{
             }
             break;
         case "PATCH":
-            $data = decodeJson();
-            if (json_last_error() === JSON_ERROR_NONE && isset($data['nick']) && isset($_GET['id'])){
-                $person = PersonService::updatePersonById($_GET['id'], $data['nick']);
+            if (json_last_error() === JSON_ERROR_NONE && isset($_GET['nick']) && isset($_GET['id'])){
+                $person = PersonService::updatePersonById($_GET['id'], $_GET['nick']);
                 echo json_encode($person);
             }else{
                 http_response_code(400);
@@ -60,7 +63,7 @@ catch(PersonException $e){
 
 function decodeJson(): array{
     $jsonData = file_get_contents("php://input");
-    return $data = json_decode($jsonData, true);
+    return json_decode($jsonData, true);
 }
 
 

@@ -18,6 +18,8 @@
         require __DIR__ . "/controllers/GameController.php";
     }elseif( strpos($uri, '/points')  === 0 ){
         require __DIR__ . "/controllers/PersonGameController.php";
+    }elseif ( strpos($uri, '/index')  === 0){
+        require __DIR__ . "/frontend/index.html";
     }else{
         http_response_code(404);
         echo json_encode(["error" => "Not Found"]);

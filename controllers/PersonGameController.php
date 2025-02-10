@@ -33,8 +33,8 @@ try{
             }
             break;
         case "DELETE":
-            if (isset($_GET['id'])){
-                PersonGameService::deleteById($_GET['id']);
+            if (isset($_GET['person_id']) && isset($_GET['game_id'])){
+                PersonGameService::deleteById($_GET['person_id'],$_GET['game_id']);
             }else{
                 http_response_code(400);
                 echo json_encode(["error" => "Not apropiate data"]);

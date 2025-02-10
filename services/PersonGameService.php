@@ -21,9 +21,9 @@ class PersonGameService {
         }
     }
     
-    public static function deleteById($id): void {
+    public static function deleteById($person_id, $game_id): void {
         try {
-            PersonGameRepository::deleteById($id);
+            PersonGameRepository::deleteById($person_id, $game_id);
         } catch (PDOException $e) {
             throw new PersonGameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }

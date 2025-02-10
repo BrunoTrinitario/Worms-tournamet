@@ -31,6 +31,14 @@ class GameRepository {
         return array_map(fn($g) => new Game($g['id'], $g['game_date'], $g['description']), $data);
     }
 
+    public static function findAll(): array {
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("SELECT * FROM game");
+        $stmt->execute([]);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($g) => new Game($g['id'], $g['game_date'], $g['description']), $data);
+    }
+
     public static function deleteById($id): void {
             $pdo = Database::connect();
             $stmt = $pdo->prepare("DELETE FROM game WHERE id = ?");
