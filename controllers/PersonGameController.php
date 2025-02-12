@@ -16,6 +16,9 @@ try{
             }elseif (isset($_GET['user-id'])){
                 $game = PersonGameService::getAllInfomationGameForOneUser($_GET['user-id']);
                 echo json_encode($game);
+            }elseif(isset($_GET['game-id'])){
+                $game = PersonGameService::getAllInfomationGameForGame($_GET['game-id']);
+                echo json_encode($game);
             }else{
                 http_response_code(400);
                 echo json_encode(["error" => "Not apropiate data"]);

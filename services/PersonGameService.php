@@ -45,6 +45,14 @@ class PersonGameService {
         }
     }
 
+    public static function getAllInfomationGameForGame($game_id): array{
+        try {
+            return PersonGameRepository::getAllInfomationGameForOneGame($game_id);
+        } catch (PDOException $e) {
+            throw new PersonGameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
+        }
+    }
+
     public static function getAllGames():array{
         try {
             return PersonGameRepository::getAllGames();
@@ -52,6 +60,7 @@ class PersonGameService {
             throw new PersonGameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }
     }
+
 
 }
 ?>

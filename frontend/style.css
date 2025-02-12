@@ -1,6 +1,12 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    background-image: url('../worms_background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh; 
+    margin: 0; 
 }
 #button-container {
     margin: 20px;
@@ -27,9 +33,10 @@ th, td {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: center;
+    background-color: white;
 }
 th {
-    background-color: #4CAF50;
+    background-color: #008CBA;
     color: white;
 }
 #add_button_div {
@@ -48,7 +55,13 @@ th {
     height: 100%;
     display: block; 
     margin: 0; 
+    background-color: #8bba00;
   }
 .cell{
     padding: 0;
+}
+.full-row {
+    text-align: center;
+    font-weight: bold;
+    background: #ffffff;
 }

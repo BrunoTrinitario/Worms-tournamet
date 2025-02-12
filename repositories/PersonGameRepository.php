@@ -77,5 +77,18 @@ class PersonGameRepository {
         }
         return $PersonPointArray;
     }
+
+    public static function getAllInfomationGameForOneGame($game_id): array{
+        $pdo = Database::connect();
+        $stmt = $pdo->prepare("SELECT persongame.*, nick FROM persongame, person where persongame.game_id  = ? and persongame.person_id = person.id");
+        $stmt->execute([$game_id]);
+        $PersonPointArray=[];
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($data as $element){
+            $PersonPointArray[] = new PersonPointDto($element['game_id'],$element['nick'],$element['points'],$element['mvp_points'],$element['damage_points'],$element['quantity_points'],1);
+        }
+        return $PersonPointArray;
+    }
+
 }
 ?>

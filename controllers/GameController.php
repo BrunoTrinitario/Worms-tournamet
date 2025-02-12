@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__."/../services/GameService.php";
 require_once __DIR__."/../util/GameException.php";
+require_once __DIR__."/../dtos/DataGameDto.php";
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 http_response_code(200);
@@ -17,12 +19,22 @@ try{
             }elseif (isset($_GET['date'])){
                 $game = GameService::getGamesByDate($_GET['date']);
                 echo json_encode($game);
-            }elseif($_GET['date1'] && $_GET['date2']){
+            }elseif(isset($_GET['date1']) && isset($_GET['date2'])){
                 $game = GameService::getGamesBetweenDates($_GET['date1'],$_GET['date2']);
                 echo json_encode($game);
+            }elseif (isset($_GET['game_details'])){
+                $gameDetails = GameService::getGameDetailsByGameId($_GET['game_details']);
+                echo json_encode($gameDetails);
             }else{
                 http_response_code(400);
                 echo json_encode(["error" => "Not apropiate data"]);
+            }
+            break;
+        case "PATCH":
+            $data = decodeJson();
+            if (isset($_GET["game_id"])){
+                $dataGame = new DataGameDto($data["worms_quantity"], $data["worms_hp"],$data["description"]);
+                GameService::updateGameDetails($_GET["game_id"],  $dataGame);
             }
             break;
         case "POST":

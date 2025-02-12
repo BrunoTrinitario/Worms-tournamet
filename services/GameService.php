@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__."/../repositories/GameRepository.php";
 require_once __DIR__."/../models/Game.php";
+require_once __DIR__."/../models/GameData.php";
 require_once __DIR__."/../util/GameException.php";
 require_once __DIR__."/../util/Constants.php";
 class GameService {
@@ -55,5 +56,22 @@ class GameService {
             throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
         }
     }
+
+    public static function getGameDetailsByGameId($id):GameData{
+        try {
+            return GameRepository::findDetailsByGameId($id);
+        } catch (PDOException $e) {
+            throw new GameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
+        }
+    }
+
+    public static function updateGameDetails($game_id, $gameData): GameData{
+        try {
+            return GameRepository::updateGameData($game_id, $gameData);
+        } catch (PDOException $e) {
+            throw new PersonGameException(Constants::DB_ERROR."  ERROR: ". $e->getMessage());
+        }
+    }
+
 }
 ?>
