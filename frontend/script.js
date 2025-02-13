@@ -300,7 +300,7 @@ function generateGameDetailsTable(data,row){
 
 function delGame(fila){
     const id = fila.cells[0].innerText;
-    axios.delete('http://localhost:8000/games?id='+id)
+    axios.delete(`http://localhost:8000/games?id=${id}`)
         .then(response => {
             generateGameList();
         })

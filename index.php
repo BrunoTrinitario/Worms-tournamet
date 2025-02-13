@@ -20,6 +20,8 @@
         require __DIR__ . "/controllers/PersonGameController.php";
     }elseif ( strpos($uri, '/index')  === 0){
         require __DIR__ . "/frontend/index.html";
+    }elseif( strpos($uri, '/login')  === 0){
+        require __DIR__ . "/frontend/login.html";
     }else{
         http_response_code(404);
         echo json_encode(["error" => "Not Found"]);
