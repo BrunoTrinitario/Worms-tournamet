@@ -7,9 +7,8 @@ axios.interceptors.response.use(
     response => response, 
     error => {
         if (error.response.status === 401) {
-            alert("Sesion expirada");
+            alert("Session expirada");
             window.location.href = "http://localhost:8000/login";
-
         }
         return Promise.reject(error);
     }

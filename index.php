@@ -12,7 +12,7 @@
     $method = $_SERVER['REQUEST_METHOD'];
     http_response_code(200);
     
-    if( strpos($uri, '/login')  === 0){
+    if( strpos($uri, '/login')  === 0 || $uri === '/' ){
         require __DIR__ . "/frontend/login.html";
     }elseif( strpos($uri, '/auth')  === 0 ){
         require __DIR__ . "/controllers/AuthController.php";

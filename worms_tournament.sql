@@ -34,3 +34,9 @@ CREATE TABLE game_data (
   FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE CASCADE
 );
 
+CREATE TABLE users (
+  id int PRIMARY KEY AUTO_INCREMENT,
+  username varchar(50) NOT NULL unique,
+  password varchar(255) NOT NULL
+)
+
