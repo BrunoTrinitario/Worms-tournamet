@@ -1,6 +1,19 @@
 const main_container = document.getElementById("main_container");
 const button_container = document.getElementById("button-container");
+const token = localStorage.getItem('token');
+axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 const personGames = [];
+axios.interceptors.response.use(
+    response => response, 
+    error => {
+        if (error.response.status === 401) {
+            alert("Sesion expirada");
+            window.location.href = "http://localhost:8000/login";
+
+        }
+        return Promise.reject(error);
+    }
+);
 
 //utilities
 function createTable(){

@@ -12,7 +12,7 @@ class JWTutils{
     
         $payload = [
             'iat' => time(),
-            'exp' => time() + (60 * 60),
+            'exp' => time() + (60*15),
             'sub' => $user_id
         ];
     

@@ -1,5 +1,5 @@
 <?php
-
+    require_once __DIR__ . "/config/SecurityFilters.php";
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -12,19 +12,37 @@
     $method = $_SERVER['REQUEST_METHOD'];
     http_response_code(200);
     
-    if ( strpos($uri, '/person')  === 0 ){
-         require __DIR__ . "/controllers/PersonController.php";
-    }elseif( strpos($uri, '/game')  === 0 ){
-        require __DIR__ . "/controllers/GameController.php";
-    }elseif( strpos($uri, '/points')  === 0 ){
-        require __DIR__ . "/controllers/PersonGameController.php";
-    }elseif ( strpos($uri, '/index')  === 0){
-        require __DIR__ . "/frontend/index.html";
-    }elseif( strpos($uri, '/login')  === 0){
+    if( strpos($uri, '/login')  === 0){
         require __DIR__ . "/frontend/login.html";
+    }elseif( strpos($uri, '/auth')  === 0 ){
+        require __DIR__ . "/controllers/AuthController.php";
     }else{
-        http_response_code(404);
-        echo json_encode(["error" => "Not Found"]);
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+            if (SecurityFilters::JWTfilter($auth_header)){
+                if ( strpos($uri, '/person')  === 0 ){
+                    require __DIR__ . "/controllers/PersonController.php";
+                    exit();
+               }elseif( strpos($uri, '/game')  === 0 ){
+                   require __DIR__ . "/controllers/GameController.php";
+                   exit();
+               }elseif( strpos($uri, '/points')  === 0 ){
+                   require __DIR__ . "/controllers/PersonGameController.php";
+                   exit();
+               }else{
+                   http_response_code(404);
+                   echo json_encode(["error" => "Not Found"]);
+               }
+            }else{
+                http_response_code(401);
+                exit();
+            }
+            
+        }else{
+            http_response_code(401);
+            exit();
+        }
+        
     }
 
 

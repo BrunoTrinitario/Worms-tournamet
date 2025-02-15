@@ -20,7 +20,7 @@ CREATE TABLE persongame (
   mvp_points double DEFAULT NULL,
   damage_points double DEFAULT NULL,
   quantity_points double DEFAULT NULL,
-  PRIMARY KEY (person_id, game_id);
+  PRIMARY KEY (person_id, game_id),
   FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE CASCADE,
   FOREIGN KEY (person_id) REFERENCES person(id) ON DELETE CASCADE
 );
