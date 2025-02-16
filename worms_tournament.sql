@@ -1,5 +1,3 @@
-CREATE DATABASE worms_tournament;
-
 USE worms_tournament;
 
 CREATE TABLE game (
@@ -28,9 +26,9 @@ CREATE TABLE persongame (
 CREATE TABLE game_data (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   game_id int(11) NOT NULL,
-  description text NOT NULL,
-  worms_quantity int(11) NOT NULL CHECK (worms_quantity >= 0),
-  worms_hp int(11) NOT NULL CHECK (worms_hp >= 0),
+  description text,
+  worms_quantity int(11),
+  worms_hp int(11),
   FOREIGN KEY (game_id) REFERENCES game(id) ON DELETE CASCADE
 );
 

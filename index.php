@@ -11,14 +11,13 @@
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $method = $_SERVER['REQUEST_METHOD'];
     http_response_code(200);
-    
     if( strpos($uri, '/login')  === 0 || $uri === '/' ){
-        require __DIR__ . "/frontend/login.html";
+        require "./frontend/login.html";
     }elseif( strpos($uri, '/auth')  === 0 ){
         require __DIR__ . "/controllers/AuthController.php";
     }else{
-        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-            $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+        if (isset(getallheaders()['Authorization'])) {
+            $auth_header = getallheaders()['Authorization'];
             if (SecurityFilters::JWTfilter($auth_header)){
                 if ( strpos($uri, '/person')  === 0 ){
                     require __DIR__ . "/controllers/PersonController.php";
@@ -29,6 +28,8 @@
                }elseif( strpos($uri, '/points')  === 0 ){
                    require __DIR__ . "/controllers/PersonGameController.php";
                    exit();
+               }elseif(strpos($uri, '/index')  === 0){
+                    require "./frontend/index.html";
                }else{
                    http_response_code(404);
                    echo json_encode(["error" => "Not Found"]);

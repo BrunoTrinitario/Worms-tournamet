@@ -9,6 +9,7 @@ class GameRepository {
         $stmt = $pdo->prepare("INSERT INTO game (game_date,description) VALUES (?,?)");
         $stmt->execute([$game->date, $game->description]);
         $game->id = $pdo->lastInsertId();
+        $pdo = Database::connect();
         $stmt = $pdo->prepare("INSERT INTO game_data (game_id) VALUES (?)");
         $stmt->execute([$game->id]);
         return $game;
@@ -64,7 +65,15 @@ class GameRepository {
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         $game = GameRepository::findById($id);
         $gameData = new GameData($game);
-        $gameData -> setOtherAtributes($data['description'], $data['worms_quantity'], $data['worms_hp']);
+        if (isset($data['description'])){
+            $gameData -> setDescription($data['description']);
+        }
+        if (isset($data['worms_quantity'])){
+            $gameData -> setWormsQuantity($data['worms_quantity']);
+        }
+        if (isset($data['worms_hp'])){
+            $gameData -> setWormsHp($data['worms_hp']);
+        }
         return $gameData;
     }
 
@@ -73,7 +82,6 @@ class GameRepository {
         $stmt = $pdo->prepare("UPDATE game_data SET description = ?, worms_quantity =? , worms_hp = ? where game_id=? ");
         $stmt->execute([$gameData -> description,$gameData ->worms_quantity, $gameData -> worms_hp , $game_id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        print_r($data." ".$game_id);
         
         $game = GameRepository::findById($game_id);
 

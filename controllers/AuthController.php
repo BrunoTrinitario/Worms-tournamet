@@ -6,7 +6,6 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $accion = basename($uri);
 try{
     if ($accion === 'register' && $method === 'POST'){
-        
         $data = decodeJson();
         if (json_last_error() === JSON_ERROR_NONE && isset($data['username']) && isset($data['password'])){
             AuthService::register($data['username'], $data['password']);

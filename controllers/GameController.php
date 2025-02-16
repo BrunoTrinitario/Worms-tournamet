@@ -31,6 +31,7 @@ try{
             }
             break;
         case "PATCH":
+            echo "PATCH 2 ";
             $data = decodeJson();
             if (isset($_GET["game_id"])){
                 $dataGame = new DataGameDto($data["worms_quantity"], $data["worms_hp"],$data["description"]);

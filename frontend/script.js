@@ -13,7 +13,6 @@ axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
 //utilities
 function createTable(){
     const tabla = document.createElement("table");
@@ -66,6 +65,7 @@ function generatePersonList(){
             createTable();
             const tabla = document.getElementById("tabla").getElementsByTagName("tbody")[0];
             tabla.innerHTML = "";
+            console.log(data);
             data.forEach(jugador => {
                 let fila = tabla.insertRow();
                 fila.insertCell(0).textContent = jugador.id;
