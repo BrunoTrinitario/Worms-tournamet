@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/../services/AuthService.php";
+require_once __DIR__."/../util/UserException.php";
 $method = $_SERVER['REQUEST_METHOD'];
 http_response_code(200);
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -17,10 +18,16 @@ try{
     }elseif ($accion === 'login' && $method === 'POST'){
         $data = decodeJson();
         if (json_last_error() === JSON_ERROR_NONE && isset($data['username']) && isset($data['password'])){
-            $token = AuthService::login($data['username'], $data['password']);
-            echo json_encode($token);
+            try{
+                $token = AuthService::login($data['username'], $data['password']);
+                echo json_encode($token);
+            }catch(UserException $e){   
+                http_response_code(401);
+                echo json_encode(["error" => $e->getMessage()]);
+            }
+            exit();
         }else{
-            http_response_code(400);
+            http_response_code(401);
             echo json_encode(["error" => "Not apropiate data"]);
         }
     }else{

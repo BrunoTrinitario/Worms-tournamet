@@ -9,8 +9,15 @@ function login(){
     }
     axios.post('http://localhost:8000/auth/login', JSON.stringify(obj)).then((response) => {
         if (response.status == 200){
-            localStorage.setItem('token', response.data.token);
-            window.location.href = './frontend/index.html';
+            if (response.data.token){
+                localStorage.setItem('token', response.data.token);
+                window.location.href = './frontend/index.html';
+            }else{
+                alert("Server error");
+            }
+            
         }
-    }).catch(error => console.error("Error al cargar datos:", error));
+    }).catch(error => {
+        error.response.status == 401 ? alert("Invalid username or password") : alert("Server error");
+    });
 }

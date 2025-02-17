@@ -35,6 +35,7 @@ CREATE TABLE game_data (
 CREATE TABLE users (
   id int PRIMARY KEY AUTO_INCREMENT,
   username varchar(50) NOT NULL unique,
-  password varchar(255) NOT NULL
+  password varchar(255) NOT NULL,
+  role varchar(15) NOT NULL
 )
 

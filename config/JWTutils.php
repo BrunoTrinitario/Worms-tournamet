@@ -7,13 +7,14 @@ use Firebase\JWT\Key;
 $secret_key = "SECRET123";
 
 class JWTutils{
-    public static function generateToken($user_id) {
+    public static function generateToken($user_id, $role){
         global $secret_key;
     
         $payload = [
             'iat' => time(),
             'exp' => time() + (60*15),
-            'sub' => $user_id
+            'sub' => $user_id,
+            'role' => $role
         ];
     
         return JWT::encode($payload, $secret_key, 'HS256');

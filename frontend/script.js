@@ -65,7 +65,6 @@ function generatePersonList(){
             createTable();
             const tabla = document.getElementById("tabla").getElementsByTagName("tbody")[0];
             tabla.innerHTML = "";
-            console.log(data);
             data.forEach(jugador => {
                 let fila = tabla.insertRow();
                 fila.insertCell(0).textContent = jugador.id;
@@ -510,12 +509,10 @@ async function createPersonGame(list){
     let game_id;
     if (select && select.selectedIndex>=0) {
         nick = select.options[select.selectedIndex].text;  // Obtiene el valor seleccionado
-        console.log("Valor seleccionado:", nick);
     }
     select = list.cells[0].querySelector("select");
     if (select && select.selectedIndex>=0) {
         game_id = select.options[select.selectedIndex].text;  // Obtiene el valor seleccionado
-        console.log("Valor seleccionado:", game_id);
     }
 
     const response = await axios.get(`http://localhost:8000/persons?nick=${nick}`);
