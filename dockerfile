@@ -19,6 +19,3 @@ COPY worms_tournament.sql /docker-entrypoint-initdb.d/
 
 # Exponer los puertos
 EXPOSE 80 3306
-
-# Comando de inicio para el contenedor: iniciar Apache y MariaDB en el mismo contenedor
-CMD service mariadb start && apache2-foregroundmari
