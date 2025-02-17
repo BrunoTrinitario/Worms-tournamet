@@ -1,6 +1,6 @@
 <?php
 class Database {
-    private static $host = "db";
+    private static $host = "localhost";
     private static $port = "3306"; 
     private static $dbname = "worms_tournament";
     private static $username = "root";

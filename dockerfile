@@ -1,31 +1,24 @@
-# Usa la imagen oficial de PHP con Apache
-FROM php:8.2-apache
+# Usar la imagen base de PHP con Apache
+FROM php:7.4-apache
 
-# Instalar extensiones de PHP necesarias
-RUN apt-get update && apt-get install -y \
-    unzip \
-    curl \
-    git \
-    libonig-dev \
-    && docker-php-ext-install mysqli pdo pdo_mysql
+# Instalar dependencias necesarias (por ejemplo, MySQL client)
+RUN apt-get update && apt-get install -y mariadb-client
 
-# Instalar Composer globalmente
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Verificar que Composer está instalado
-RUN composer --version
-
-# Habilitar mod_rewrite en Apache (opcional)
-RUN a2enmod rewrite
-
-# Copiar el código fuente de la aplicación (si es necesario)
-COPY . /var/www/html
-
-# Definir el directorio de trabajo
+# Configurar el directorio de trabajo
 WORKDIR /var/www/html
 
-# Exponer el puerto 80
-EXPOSE 80
+# Copiar el contenido del proyecto al contenedor
+COPY . /var/www/html
 
-# Instalar dependencias de Composer si existe un composer.json
-RUN if [ -f "composer.json" ]; then composer install --no-dev --optimize-autoloader; fi
+# Instalar extensiones de PHP necesarias
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# Configurar la base de datos con Mariadb
+RUN mkdir -p /docker-entrypoint-initdb.d
+COPY worms_tournament.sql /docker-entrypoint-initdb.d/
+
+# Exponer los puertos
+EXPOSE 80 3306
+
+# Comando de inicio para el contenedor: iniciar Apache y MariaDB en el mismo contenedor
+CMD service mysql start && apache2-foreground
