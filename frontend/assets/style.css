@@ -1,7 +1,7 @@
 body {
+    background-image: url('./worms_background.jpg');
     font-family: Arial, sans-serif;
     text-align: center;
-    background-image: url('../worms_background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

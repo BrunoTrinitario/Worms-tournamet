@@ -10,6 +10,15 @@ class SecurityFilters{
             return false;  
         }
     }
+
+    public static function roleFilter($token){
+        $role = JWTutils::getRoleFromToken($token);
+        if ($role == 'ADMIN'){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 ?>
