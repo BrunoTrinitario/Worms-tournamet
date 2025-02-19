@@ -14,7 +14,7 @@
     $method = $_SERVER['REQUEST_METHOD'];
     http_response_code(200);
 
-    $extensiones_permitidas = ['css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'woff', 'woff2', 'ttf', 'otf'];
+    $extensiones_permitidas = ['css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'woff', 'woff2', 'ttf', 'otf', 'ico'];
 
     $extension = pathinfo($request_uri, PATHINFO_EXTENSION);
 
@@ -27,8 +27,14 @@
     $paths = ["/index", "/auth", "/games", "/persons", "/points"];
 
     if ($request_uri === '/' || $request_uri === '/login') {
-        readfile(__DIR__."/frontend/login.html");
-        exit;
+        if (validateHeadersAndToken()){
+            loadIndex();
+            exit;
+        }else{
+            readfile(__DIR__."/frontend/login.html");
+            exit;
+        }
+
     }
 
     if (strpos($request_uri, "/auth")===0){
@@ -36,20 +42,15 @@
         exit;
     }
 
-    if (getallheaders()["Authorization"] && SecurityFilters::JWTfilter(getallheaders()["Authorization"])) {
+    if (validateHeadersAndToken()) {
         $token = getallheaders()["Authorization"];
         $token = str_replace("Bearer ", "", $token);
         $i=0;
         foreach ($paths as $path) {
             if (strpos($request_uri, $path) === 0) {
                 if ($path === "/index") {
-                    if (SecurityFilters::roleFilter($token)) {
-                        readfile(__DIR__."/frontend/index.html");
-                        exit;
-                    }else{
-                        readfile(__DIR__."/frontend/user_index.html");
-                        exit;
-                    }
+                    loadIndex();
+                    exit;
                 }else{
                     require __DIR__."/./controllers/".$controllers[$i];
                     exit;
@@ -67,7 +68,31 @@
     http_response_code(404);
     echo json_encode(["error" => "Not found"]);
 
-   
+    function loadIndex(){
+        $token = getallheaders()["Authorization"];
+        $token = str_replace("Bearer ", "", $token);
+        if (SecurityFilters::roleFilter($token)) {
+            readfile(__DIR__."/frontend/index.html");
+            exit;
+        }else{
+            readfile(__DIR__."/frontend/user_index.html");
+            exit;
+        }
+    }
+
+    function validateHeadersAndToken(){
+        if (isset(getallheaders()["Authorization"])){
+            $token = getallheaders()["Authorization"];
+            $token = str_replace("Bearer ", "", $token);
+            if (SecurityFilters::JWTfilter($token)){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
 
 
 
